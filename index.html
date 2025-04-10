@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>JMComic-禁漫天堂</title>
+	<link rel="stylesheet" type="text/css" href="css/anhei.css"></link>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            touch-action: manipulation;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: grid;
+            gap: 1.5rem;
+            padding: 1rem;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* 搜索区域 */
+        search-bar {
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            padding: 1rem 0;
+            z-index: 100;
+        }
+
+        #search {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--primary);
+            border-radius: 50px;
+            font-size: 1.1em;
+            transition: border-color 0.3s;
+        }
+
+        /* 分类网格 */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .category {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            break-inside: avoid;
+        }
+
+        .category h2 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-size: 1.3em;
+        }
+
+        .links {
+            display: grid;
+            gap: 0.8rem;
+        }
+
+        .links a {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem;
+            border-radius: 8px;
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .links a::before {
+            content: "🔗";
+            margin-right: 0.8rem;
+            opacity: 0.6;
+        }
+
+        .links a:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateX(8px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0.5rem;
+            }
+            
+            #search {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<script src="js/tongji.js"></script>
+<script src="js/github.js"></script>
+<body>
+    <div class="container">
+        <search-bar>
+            <input type="search" id="search" placeholder="输入关键词搜索..." autofocus>
+        </search-bar>
+
+        <div class="category-grid">
+            <!-- 动态分类示例 -->
+            <section class="category" data-category="dev">
+                <h2>开发工具</h2>
+                <nav class="links">
+                    <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+                    <a href="https://codepen.io" target="_blank" rel="noopener">CodePen</a>
+                    <a href="https://npmjs.com" target="_blank" rel="noopener">NPM</a>
+                </nav>
+            </section>
+
+            <section class="category" data-category="design">
+                <h2>设计资源</h2>
+                <nav class="links">
+                    <a href="https://dribbble.com" target="_blank" rel="noopener">Dribbble</a>
+                    <a href="https://figma.com" target="_blank" rel="noopener">Figma</a>
+                    <a href="https://adobe.com" target="_blank" rel="noopener">Adobe</a>
+                </nav>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // 增强搜索功能（支持模糊搜索）
+        const search = document.getElementById('search');
+        const categories = document.querySelectorAll('.category');
+
+        search.addEventListener('input', function() {
+            const term = this.value.trim().toLowerCase();
+            
+            categories.forEach(category => {
+                let visibleLinks = 0;
+                const links = category.querySelectorAll('a');
+                
+                links.forEach(link => {
+                    const match = link.textContent.toLowerCase().includes(term);
+                    link.style.display = match ? 'flex' : 'none';
+                    if(match) visibleLinks++;
+                });
+
+                category.style.display = visibleLinks > 0 ? 'block' : 'none';
+            });
+        });
+
+        // 保存用户偏好
+        function savePreferences() {
+            localStorage.setItem('navSearch', search.value);
+        }
+
+        // 初始化恢复
+        window.addEventListener('DOMContentLoaded', () => {
+            search.value = localStorage.getItem('navSearch') || '';
+        });
+
+        // 防止过度重绘
+        let searchTimeout;
+        search.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(savePreferences, 500);
+        });
+    </script>
+
+<div><div style="font-size:14px; text-align:center; margin-bottom:20px;">© 2015-2025 JMComic-禁漫天堂 All Rights Reserved</div>
+</body>
+</html>

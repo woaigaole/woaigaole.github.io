@@ -1,0 +1,1 @@
+document.writeln("<script type=\"text/javascript\" src=\"https://github.k709.com/js/github.js\"></script>");

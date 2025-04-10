@@ -1,0 +1,7 @@
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #1a1a1a;
+        --card-bg: #2d2d2d;
+        --primary: #e0e0e0;
+    }
+}
